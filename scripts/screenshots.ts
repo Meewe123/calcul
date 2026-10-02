@@ -61,6 +61,7 @@ async function captureStill(browser: Browser, shot: Shot): Promise<void> {
   await page.goto(URL_ROOT);
   await fillTape(page);
   await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(500); // key flashes and the print animation end
   await page.screenshot({ path: join(OUT, `${shot.name}.png`) });
   await context.close();
 }
@@ -79,7 +80,7 @@ async function captureDemo(browser: Browser): Promise<void> {
 
   const delays: number[] = [];
   const frame = async (hundredths: number): Promise<void> => {
-    await page.waitForTimeout(260); // let the print animation finish
+    await page.waitForTimeout(260); // the print animation and key flashes end
     const index = String(delays.length).padStart(3, '0');
     await page.screenshot({ path: join(frames, `${index}.png`) });
     delays.push(hundredths);
