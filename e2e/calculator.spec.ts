@@ -137,6 +137,19 @@ test.describe('input', () => {
     await page.keyboard.up('7');
   });
 
+  test('Ctrl+C with nothing selected copies the result without digit grouping', async ({
+    page,
+  }) => {
+    await calculate(page, '1000*1.5');
+    const copied = await page.evaluate(() => {
+      const data = new DataTransfer();
+      document.dispatchEvent(new ClipboardEvent('copy', { clipboardData: data, bubbles: true }));
+      return data.getData('text/plain');
+    });
+    expect(copied).toBe('1500');
+    await expect(page.locator('#toast-text')).toHaveText('Скопировано: 1500');
+  });
+
   test('pasting reads an expression, and refuses nonsense with a reason', async ({ page }) => {
     await paste(page, '2 × (3 + 4)');
     expect(await textOf(display(page).main)).toBe('2 × (3 + 4)');
