@@ -44,7 +44,7 @@ export function startApp(): void {
     main: byId('display-main', HTMLElement),
     hint: byId('display-hint', HTMLElement),
   };
-  const keypad = doc.querySelector<HTMLElement>('.keypad');
+  const keypad = byId('keypad', HTMLElement);
   const tapeList = byId('tape-list', HTMLOListElement);
   const tapeEmpty = byId('tape-empty', HTMLElement);
   const tapeScroll = byId('tape-scroll', HTMLElement);
@@ -59,7 +59,6 @@ export function startApp(): void {
     byId('toast-text', HTMLElement),
     byId('toast-action', HTMLButtonElement),
   );
-  if (!keypad) throw new Error('Missing .keypad');
 
   let locale: Locale = detectLocale(
     location.search,
@@ -151,23 +150,8 @@ export function startApp(): void {
     }
   }
 
-  function run(command: Command): void {
-    switch (command.type) {
-      case 'press':
-        dispatch({ type: 'press', key: command.key });
-        break;
-      case 'evaluate':
-        dispatch({ type: 'evaluate' });
-        break;
-      case 'clear':
-        dispatch({ type: 'clear' });
-        break;
-    }
-  }
-
   /** Lights up the on-screen key when the same key is typed on a keyboard. */
   function flashKey(command: Command): void {
-    if (!keypad) return;
     let selector = `[data-action="${command.type}"]`;
     if (command.type === 'press') {
       // Both parentheses live on one on-screen key.
@@ -237,7 +221,7 @@ export function startApp(): void {
     if (event.key === 'Enter' && keyboardFocused) return;
 
     event.preventDefault();
-    run(command);
+    dispatch(command);
     flashKey(command);
   });
 
