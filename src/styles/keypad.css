@@ -1,0 +1,87 @@
+/*
+ * The keypad is a ruled grid, like a printed form: keys share hairlines
+ * instead of floating as separate tiles. Function and operator keys are a
+ * shade darker; only `=` carries the accent.
+ */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: var(--hairline);
+  border-radius: var(--radius-machine);
+  background: var(--rule);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.key {
+  display: grid;
+  place-items: center;
+  min-height: var(--key-height);
+  padding: 0;
+  border: 0;
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  line-height: 1;
+  touch-action: manipulation;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+
+.key--fn,
+.key--op {
+  background: var(--key-fn);
+}
+
+.key--fn {
+  font-size: var(--text-lg);
+}
+
+.key--equals {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+}
+
+@media (hover: hover) {
+  .key:hover {
+    background: var(--key-hover);
+  }
+
+  .key--fn:hover,
+  .key--op:hover {
+    background: var(--key-fn-hover);
+  }
+
+  .key--equals:hover {
+    background: var(--accent-hover);
+  }
+}
+
+.key:active,
+.key.is-pressed {
+  background: var(--key-pressed);
+  transition-duration: 0ms;
+}
+
+.key--equals:active,
+.key--equals.is-pressed {
+  background: var(--accent-pressed);
+}
+
+.key:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline-offset: -5px;
+}
+
+.key--equals:focus-visible {
+  outline-color: var(--on-accent);
+}
+
+.key__icon {
+  width: 1.1em;
+  height: 1.1em;
+}

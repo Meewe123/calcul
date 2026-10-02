@@ -1,0 +1,143 @@
+/*
+ * The display: what was calculated (meta), what is typed or the result
+ * (main), and a live preview or an error message (hint). Each line has a
+ * fixed height, so nothing jumps while typing.
+ */
+.display {
+  container-type: inline-size;
+  display: grid;
+  grid-template-rows: 1.25rem auto 1.5rem;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1) 0;
+  font-family: var(--font-mono);
+  text-align: end;
+}
+
+.display__meta,
+.display__hint {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Long expressions are cut at the start, so the end of the calculation stays visible. */
+.display__meta {
+  direction: rtl;
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.display__meta > * {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.display__main {
+  --line: calc(var(--text-3xl) * 1.2);
+
+  height: var(--line);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  font-size: clamp(
+    var(--text-xl),
+    100cqi / (var(--chars, 1) * var(--mono-advance)) * 0.96,
+    var(--display-max, var(--text-3xl))
+  );
+  line-height: var(--line);
+  white-space: nowrap;
+  overscroll-behavior-x: contain;
+}
+
+@media (min-width: 48rem) {
+  .display {
+    grid-template-rows: 1.5rem auto 1.5rem;
+    padding-top: var(--space-4);
+  }
+
+  .display__main {
+    --line: calc(var(--text-4xl) * 1.2);
+    --display-max: var(--text-4xl);
+  }
+}
+
+.display__main::-webkit-scrollbar {
+  display: none;
+}
+
+.display__main[data-mode='result'] {
+  font-weight: 500;
+}
+
+.display__main[data-mode='error'] {
+  color: var(--ink-muted);
+}
+
+.display__placeholder {
+  color: var(--ink-muted);
+}
+
+.display__hint {
+  font-size: var(--text-md);
+  color: var(--ink-muted);
+}
+
+.display__hint[data-kind='error'] {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Parts of an expression */
+
+.part--operator {
+  color: var(--ink-muted);
+}
+
+.part--paren {
+  color: var(--ink-muted);
+}
+
+.part--ghost {
+  color: var(--rule);
+}
+
+.part--error {
+  color: var(--ink);
+  text-decoration: underline wavy var(--accent);
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.18em;
+}
+
+.part__ellipsis {
+  color: var(--ink-muted);
+}
+
+.power {
+  font-size: 0.6em;
+  line-height: 0;
+  vertical-align: 0.9em;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-inline-start: 0.08em;
+  vertical-align: -0.08em;
+  background: var(--accent);
+  animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}

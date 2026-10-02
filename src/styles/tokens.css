@@ -1,0 +1,94 @@
+/*
+ * Design tokens. Everything visual is defined here once and referenced by
+ * name; components never use raw colours, sizes or durations.
+ *
+ * The palette is paper and ink with a single accent: the red of a
+ * two-colour printer ribbon, which adding machines used for totals.
+ * Colours are light/dark pairs; `color-scheme` picks one, so a manual
+ * theme only has to switch the scheme.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Colour */
+  --paper: light-dark(#f3f0e8, #131210);
+  --sheet: light-dark(#fbfaf6, #1b1a17);
+  --ink: light-dark(#1c1b18, #ece7dc);
+  --ink-muted: light-dark(#656055, #9f998c);
+  --rule: light-dark(#d6d0c1, #38352f);
+  --key-fn: light-dark(#eae5da, #25231f);
+  --key-hover: light-dark(#f2eee5, #23211e);
+  --key-fn-hover: light-dark(#e3ddd0, #2c2a25);
+  --key-pressed: light-dark(#d9d2c3, #34312b);
+  --accent: light-dark(#b23a1e, #f07a5a);
+  --accent-hover: light-dark(#a03319, #f38b6f);
+  --accent-pressed: light-dark(#8a2b14, #f6a28b);
+  --on-accent: light-dark(#fbfaf6, #131210);
+  --focus: var(--ink);
+  --backdrop: light-dark(rgb(28 27 24 / 0.32), rgb(0 0 0 / 0.6));
+
+  /* Type: IBM Plex. Mono for every number, Sans for words. */
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Scale: ratio 1.25 from 16px, rounded to whole pixels. */
+  --text-2xs: 0.6875rem; /* 11 */
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-md: 1rem; /* 16 */
+  --text-lg: 1.25rem; /* 20 */
+  --text-xl: 1.5625rem; /* 25 */
+  --text-2xl: 1.9375rem; /* 31 */
+  --text-3xl: 2.4375rem; /* 39 */
+  --text-4xl: 3.0625rem; /* 49 */
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.5;
+  --tracking-caps: 0.08em;
+
+  /* Advance width of a Plex Mono glyph, in em. Used to fit numbers to the display. */
+  --mono-advance: 0.6;
+
+  /* Space: a 4px grid. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --gutter: var(--space-4);
+
+  /* Shape: square paper, softly rounded controls, a rounder machine. */
+  --radius-control: 4px;
+  --radius-machine: 10px;
+  --hairline: 1px solid var(--rule);
+
+  /* Motion: short and decelerating; nothing bounces. */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-press: 70ms;
+  --duration-move: 200ms;
+  --duration-fade: 160ms;
+
+  /* Layout */
+  --machine-width: 25rem;
+  /* Keys shrink a little on short phones so the tape keeps some room. */
+  --key-height: clamp(3.25rem, 8dvh, 4rem);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: var(--space-6);
+    --key-height: 4.5rem;
+  }
+}
