@@ -10,7 +10,7 @@
 
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  height: 100dvh;
+  min-height: 100dvh;
 }
 
 .masthead {
@@ -53,7 +53,8 @@
   grid-template-areas:
     'tape'
     'machine';
-  grid-template-rows: minmax(0, 1fr) auto;
+  /* The tape gets what is left, but never less than a few entries. */
+  grid-template-rows: minmax(10rem, 1fr) auto;
   min-height: 0;
 }
 
@@ -64,9 +65,13 @@
   padding: 0 var(--gutter) max(var(--gutter), env(safe-area-inset-bottom));
 }
 
+/*
+ * Size containment: however long the tape gets, it never makes the page
+ * taller. It takes the height of its grid row and scrolls inside.
+ */
 .tape {
   grid-area: tape;
-  min-height: 0;
+  contain: size;
 }
 
 .colophon {
@@ -100,17 +105,5 @@
     padding: var(--space-3) var(--inline-pad) var(--space-4);
     font-size: var(--text-xs);
     color: var(--ink-muted);
-  }
-}
-
-/* Short screens (a phone on its side): let the page scroll instead of squeezing the tape. */
-@media (max-height: 34rem) and (max-width: 47.99rem) {
-  .app {
-    height: auto;
-    min-height: 100dvh;
-  }
-
-  .tape {
-    height: 60dvh;
   }
 }

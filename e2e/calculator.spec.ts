@@ -200,6 +200,15 @@ test.describe('settings', () => {
   });
 });
 
+test('a long tape never pushes the keypad under the footer', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'The footer is hidden on phones');
+  await page.setViewportSize({ width: 960, height: 600 });
+  for (let i = 1; i <= 30; i++) await calculate(page, `${i}+1`);
+  const keypad = await page.locator('.keypad').boundingBox();
+  const footer = await page.locator('.colophon').boundingBox();
+  expect(keypad && footer && footer.y >= keypad.y + keypad.height).toBe(true);
+});
+
 test('unknown addresses get the 404 page', async ({ page }) => {
   const response = await page.goto('/no/such/page');
   expect(response?.status()).toBe(404);
