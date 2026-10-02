@@ -192,7 +192,7 @@ export function renderTapeEntry(
   const expression = element('span', 'entry__expression');
   expression.append(renderExpression(parts, locale));
   const result = element('span', 'entry__result');
-  result.append(element('span', 'entry__sign', sign), renderNumber(shown, locale));
+  result.append(element('span', 'entry__sign', sign), '\u2009', renderNumber(shown, locale));
   for (const decorative of [number, hint]) decorative.setAttribute('aria-hidden', 'true');
 
   button.append(number, expression, hint, result);

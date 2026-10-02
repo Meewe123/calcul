@@ -139,7 +139,6 @@
 }
 
 .entry__sign {
-  margin-inline-end: 0.5ch;
   font-weight: 400;
   color: var(--ink-muted);
 }

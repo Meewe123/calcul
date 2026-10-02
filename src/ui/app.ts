@@ -210,24 +210,31 @@ export function startApp(): void {
     else if (action === 'clear') dispatch({ type: 'clear' });
   });
 
+  // A button clicked with the mouse keeps focus. Enter or Space on it would
+  // press it again, so remember which control got focus from a pointer: for
+  // that one, Enter means `=`. A control reached with Tab keeps its keys.
+  let pointerFocused: Element | null = null;
+  doc.addEventListener(
+    'pointerdown',
+    (event) => {
+      pointerFocused = event.target instanceof Element ? event.target.closest('button, a') : null;
+    },
+    { capture: true },
+  );
+
   doc.addEventListener('keydown', (event) => {
     if (event.defaultPrevented || event.isComposing) return;
     if (event.target instanceof Element && event.target.closest('dialog')) return;
 
+    const active = doc.activeElement;
+    const keyboardFocused =
+      active instanceof HTMLElement && active !== doc.body && active !== pointerFocused;
+    if (event.key === 'Tab') pointerFocused = null;
+    if (event.key === ' ' && !keyboardFocused) event.preventDefault();
+
     const command = commandForKey(event);
     if (!command) return;
-
-    // A control focused from the keyboard keeps Enter for itself. After a
-    // mouse click focus stays on the clicked key, but then Enter means `=`.
-    const active = doc.activeElement;
-    if (
-      event.key === 'Enter' &&
-      active instanceof HTMLElement &&
-      active !== doc.body &&
-      active.matches(':focus-visible')
-    ) {
-      return;
-    }
+    if (event.key === 'Enter' && keyboardFocused) return;
 
     event.preventDefault();
     run(command);
