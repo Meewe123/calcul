@@ -1,212 +1,243 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Калькулятор</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1e1f24;
-      font-family: system-ui, sans-serif;
-    }
-    .calc {
-      width: 300px;
-      padding: 16px;
-      border-radius: 16px;
-      background: #2b2d34;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
-    }
-    .display {
-      height: 80px;
-      margin-bottom: 12px;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #15161a;
-      color: #fff;
-      text-align: right;
-      overflow: hidden;
-    }
-    .expr { height: 20px; font-size: 14px; color: #8a8d98; }
-    .value { font-size: 36px; line-height: 44px; white-space: nowrap; }
-    .keys {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-    button {
-      height: 56px;
-      border: 0;
-      border-radius: 10px;
-      background: #3a3d46;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    button:hover { filter: brightness(1.15); }
-    button:active { transform: scale(.96); }
-    .op { background: #f09a2a; }
-    .fn { background: #5a5e6b; }
-    .zero { grid-column: span 2; }
-  </style>
-</head>
-<body>
-  <div class="calc">
-    <div class="display">
-      <div class="expr" id="expr"></div>
-      <div class="value" id="value">0</div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Калькулятор</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1e1f24;
+        font-family: system-ui, sans-serif;
+      }
+      .calc {
+        width: 300px;
+        padding: 16px;
+        border-radius: 16px;
+        background: #2b2d34;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+      .display {
+        height: 80px;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: #15161a;
+        color: #fff;
+        text-align: right;
+        overflow: hidden;
+      }
+      .expr {
+        height: 20px;
+        font-size: 14px;
+        color: #8a8d98;
+      }
+      .value {
+        font-size: 36px;
+        line-height: 44px;
+        white-space: nowrap;
+      }
+      .keys {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      button {
+        height: 56px;
+        border: 0;
+        border-radius: 10px;
+        background: #3a3d46;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      button:hover {
+        filter: brightness(1.15);
+      }
+      button:active {
+        transform: scale(0.96);
+      }
+      .op {
+        background: #f09a2a;
+      }
+      .fn {
+        background: #5a5e6b;
+      }
+      .zero {
+        grid-column: span 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calc">
+      <div class="display">
+        <div class="expr" id="expr"></div>
+        <div class="value" id="value">0</div>
+      </div>
+      <div class="keys">
+        <button class="fn" data-action="clear">C</button>
+        <button class="fn" data-action="sign">±</button>
+        <button class="fn" data-action="percent">%</button>
+        <button class="op" data-op="/">÷</button>
+
+        <button data-digit="7">7</button>
+        <button data-digit="8">8</button>
+        <button data-digit="9">9</button>
+        <button class="op" data-op="*">×</button>
+
+        <button data-digit="4">4</button>
+        <button data-digit="5">5</button>
+        <button data-digit="6">6</button>
+        <button class="op" data-op="-">−</button>
+
+        <button data-digit="1">1</button>
+        <button data-digit="2">2</button>
+        <button data-digit="3">3</button>
+        <button class="op" data-op="+">+</button>
+
+        <button class="zero" data-digit="0">0</button>
+        <button data-action="dot">,</button>
+        <button class="op" data-action="equals">=</button>
+      </div>
     </div>
-    <div class="keys">
-      <button class="fn" data-action="clear">C</button>
-      <button class="fn" data-action="sign">±</button>
-      <button class="fn" data-action="percent">%</button>
-      <button class="op" data-op="/">÷</button>
 
-      <button data-digit="7">7</button>
-      <button data-digit="8">8</button>
-      <button data-digit="9">9</button>
-      <button class="op" data-op="*">×</button>
+    <script>
+      const SYMBOLS = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+      const exprEl = document.getElementById('expr');
+      const valueEl = document.getElementById('value');
 
-      <button data-digit="4">4</button>
-      <button data-digit="5">5</button>
-      <button data-digit="6">6</button>
-      <button class="op" data-op="-">−</button>
+      let current = '0'; // число, которое сейчас вводится
+      let previous = null; // первое число операции
+      let operator = null; // выбранная операция
+      let fresh = false; // следующая цифра начинает новое число
 
-      <button data-digit="1">1</button>
-      <button data-digit="2">2</button>
-      <button data-digit="3">3</button>
-      <button class="op" data-op="+">+</button>
-
-      <button class="zero" data-digit="0">0</button>
-      <button data-action="dot">,</button>
-      <button class="op" data-action="equals">=</button>
-    </div>
-  </div>
-
-  <script>
-    const SYMBOLS = { '+': '+', '-': '−', '*': '×', '/': '÷' };
-    const exprEl = document.getElementById('expr');
-    const valueEl = document.getElementById('value');
-
-    let current = '0';      // число, которое сейчас вводится
-    let previous = null;    // первое число операции
-    let operator = null;    // выбранная операция
-    let fresh = false;      // следующая цифра начинает новое число
-
-    function compute(a, b, op) {
-      switch (op) {
-        case '+': return a + b;
-        case '-': return a - b;
-        case '*': return a * b;
-        case '/': return b === 0 ? NaN : a / b;
+      function compute(a, b, op) {
+        switch (op) {
+          case '+':
+            return a + b;
+          case '-':
+            return a - b;
+          case '*':
+            return a * b;
+          case '/':
+            return b === 0 ? NaN : a / b;
+        }
       }
-    }
 
-    function format(n) {
-      if (!isFinite(n)) return 'Ошибка';
-      return String(parseFloat(n.toPrecision(12)));
-    }
-
-    function render() {
-      valueEl.textContent = current.replace('.', ',');
-      exprEl.textContent = operator
-        ? `${format(previous).replace('.', ',')} ${SYMBOLS[operator]}`
-        : '';
-    }
-
-    function inputDigit(d) {
-      if (fresh || current === 'Ошибка') {
-        current = d;
-        fresh = false;
-      } else if (current.replace(/[-.]/g, '').length < 15) {
-        current = current === '0' ? d : current + d;
+      function format(n) {
+        if (!isFinite(n)) return 'Ошибка';
+        return String(parseFloat(n.toPrecision(12)));
       }
-    }
 
-    function inputDot() {
-      if (fresh || current === 'Ошибка') {
-        current = '0.';
-        fresh = false;
-      } else if (!current.includes('.')) {
-        current += '.';
+      function render() {
+        valueEl.textContent = current.replace('.', ',');
+        exprEl.textContent = operator
+          ? `${format(previous).replace('.', ',')} ${SYMBOLS[operator]}`
+          : '';
       }
-    }
 
-    function setOperator(op) {
-      if (current === 'Ошибка') return;
-      if (operator && !fresh) {
+      function inputDigit(d) {
+        if (fresh || current === 'Ошибка') {
+          current = d;
+          fresh = false;
+        } else if (current.replace(/[-.]/g, '').length < 15) {
+          current = current === '0' ? d : current + d;
+        }
+      }
+
+      function inputDot() {
+        if (fresh || current === 'Ошибка') {
+          current = '0.';
+          fresh = false;
+        } else if (!current.includes('.')) {
+          current += '.';
+        }
+      }
+
+      function setOperator(op) {
+        if (current === 'Ошибка') return;
+        if (operator && !fresh) {
+          current = format(compute(previous, parseFloat(current), operator));
+          if (current === 'Ошибка') {
+            operator = null;
+            previous = null;
+            fresh = true;
+            return;
+          }
+        }
+        previous = parseFloat(current);
+        operator = op;
+        fresh = true;
+      }
+
+      function equals() {
+        if (!operator || current === 'Ошибка') return;
         current = format(compute(previous, parseFloat(current), operator));
-        if (current === 'Ошибка') { operator = null; previous = null; fresh = true; return; }
+        operator = null;
+        previous = null;
+        fresh = true;
       }
-      previous = parseFloat(current);
-      operator = op;
-      fresh = true;
-    }
 
-    function equals() {
-      if (!operator || current === 'Ошибка') return;
-      current = format(compute(previous, parseFloat(current), operator));
-      operator = null;
-      previous = null;
-      fresh = true;
-    }
+      function clear() {
+        current = '0';
+        previous = null;
+        operator = null;
+        fresh = false;
+      }
 
-    function clear() {
-      current = '0';
-      previous = null;
-      operator = null;
-      fresh = false;
-    }
+      function toggleSign() {
+        if (current === '0' || current === 'Ошибка') return;
+        current = current.startsWith('-') ? current.slice(1) : '-' + current;
+      }
 
-    function toggleSign() {
-      if (current === '0' || current === 'Ошибка') return;
-      current = current.startsWith('-') ? current.slice(1) : '-' + current;
-    }
+      function percent() {
+        if (current === 'Ошибка') return;
+        current = format(parseFloat(current) / 100);
+      }
 
-    function percent() {
-      if (current === 'Ошибка') return;
-      current = format(parseFloat(current) / 100);
-    }
+      function backspace() {
+        if (fresh || current === 'Ошибка') return;
+        current = current.slice(0, -1);
+        if (current === '' || current === '-') current = '0';
+      }
 
-    function backspace() {
-      if (fresh || current === 'Ошибка') return;
-      current = current.slice(0, -1);
-      if (current === '' || current === '-') current = '0';
-    }
+      document.querySelector('.keys').addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const { digit, op, action } = btn.dataset;
+        if (digit) inputDigit(digit);
+        else if (op) setOperator(op);
+        else if (action === 'dot') inputDot();
+        else if (action === 'equals') equals();
+        else if (action === 'clear') clear();
+        else if (action === 'sign') toggleSign();
+        else if (action === 'percent') percent();
+        render();
+      });
 
-    document.querySelector('.keys').addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const { digit, op, action } = btn.dataset;
-      if (digit) inputDigit(digit);
-      else if (op) setOperator(op);
-      else if (action === 'dot') inputDot();
-      else if (action === 'equals') equals();
-      else if (action === 'clear') clear();
-      else if (action === 'sign') toggleSign();
-      else if (action === 'percent') percent();
+      document.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (/^\d$/.test(k)) inputDigit(k);
+        else if (k in SYMBOLS) setOperator(k);
+        else if (k === '.' || k === ',') inputDot();
+        else if (k === 'Enter' || k === '=') {
+          e.preventDefault();
+          equals();
+        } else if (k === 'Escape') clear();
+        else if (k === 'Backspace') backspace();
+        else if (k === '%') percent();
+        else return;
+        render();
+      });
+
       render();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      const k = e.key;
-      if (/^\d$/.test(k)) inputDigit(k);
-      else if (k in SYMBOLS) setOperator(k);
-      else if (k === '.' || k === ',') inputDot();
-      else if (k === 'Enter' || k === '=') { e.preventDefault(); equals(); }
-      else if (k === 'Escape') clear();
-      else if (k === 'Backspace') backspace();
-      else if (k === '%') percent();
-      else return;
-      render();
-    });
-
-    render();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
