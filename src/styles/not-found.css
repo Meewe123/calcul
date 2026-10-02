@@ -1,0 +1,114 @@
+@import './tokens.css';
+@import './fonts.css';
+@import './base.css';
+@import './controls.css';
+
+/* The 404 page prints the missing address on a slip of tape, with 404 as the total. */
+.lost {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: var(--space-5);
+  max-width: 36rem;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: var(--space-7) var(--gutter);
+}
+
+.wordmark {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.lost__slip {
+  --tooth: 10px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'number path'
+    '.      result';
+  column-gap: var(--space-3);
+  width: min(100%, 22rem);
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  background: var(--sheet);
+  font-family: var(--font-mono);
+  text-align: end;
+}
+
+.lost__slip::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--tooth) / 2);
+  background:
+    linear-gradient(135deg, var(--paper) 50%, transparent 50%) 0 0 / var(--tooth) 100% repeat-x,
+    linear-gradient(225deg, var(--paper) 50%, transparent 50%) 0 0 / var(--tooth) 100% repeat-x;
+}
+
+.entry__number {
+  grid-area: number;
+  align-self: center;
+  font-size: var(--text-2xs);
+  color: var(--ink-muted);
+}
+
+.lost__path {
+  grid-area: path;
+  overflow-wrap: anywhere;
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.lost__result {
+  grid-area: result;
+  font-size: var(--text-3xl);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  color: var(--accent);
+}
+
+.entry__sign {
+  margin-inline-end: 0.5ch;
+  font-size: var(--text-lg);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.lost__title {
+  display: grid;
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+}
+
+.lost__title [lang='en'],
+.lost__text [lang='en'] {
+  color: var(--ink-muted);
+}
+
+.lost__text {
+  display: grid;
+  gap: var(--space-1);
+  max-width: 32rem;
+}
+
+.lost__back {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+  min-height: 2.75rem;
+  padding-inline: var(--space-4);
+  text-decoration: none;
+}
+
+.lost__back [lang='en']::before {
+  content: '·';
+  margin-inline-end: var(--space-2);
+  color: var(--ink-muted);
+}

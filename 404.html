@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Страница не найдена · calcul</title>
+    <meta name="robots" content="noindex" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('calcul:theme');
+          if (theme === 'light' || theme === 'dark')
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (error) {
+          // Storage can be blocked; the system theme is used then.
+        }
+      })();
+    </script>
+    <script type="module" src="/src/not-found.ts"></script>
+  </head>
+  <body>
+    <main class="lost">
+      <a class="wordmark lost__wordmark" href="%BASE_URL%">calcul</a>
+
+      <div class="lost__slip" aria-hidden="true">
+        <span class="entry__number">001</span>
+        <span class="lost__path" id="lost-path">?</span>
+        <span class="lost__result"><span class="entry__sign">=</span>404</span>
+      </div>
+
+      <h1 class="lost__title">
+        <span lang="ru">Такой страницы нет</span>
+        <span lang="en">This page doesn’t exist</span>
+      </h1>
+      <p class="lost__text">
+        <span lang="ru">Возможно, адрес набран с ошибкой. Калькулятор и ваша лента на месте.</span>
+        <span lang="en"
+          >The address may have a typo. The calculator and your tape are where you left them.</span
+        >
+      </p>
+      <a class="button lost__back" href="%BASE_URL%">
+        <span lang="ru">Открыть калькулятор</span>
+        <span lang="en">Open the calculator</span>
+      </a>
+    </main>
+  </body>
+</html>

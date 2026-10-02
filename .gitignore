@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+*.log
+.DS_Store
+
+# Local environment overrides. Commit only .env.example.
+.env
+.env.*
+!.env.example

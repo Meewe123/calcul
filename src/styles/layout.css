@@ -1,0 +1,109 @@
+/*
+ * Page layout.
+ * Phone: the tape fills the top and scrolls, the machine sits at the bottom
+ * within reach of the thumb — paper comes out of the top of the machine.
+ * Wider screens: the machine on the left, a long tape on the right.
+ */
+.app {
+  --content-width: 70rem;
+  --inline-pad: max(var(--gutter), (100% - var(--content-width)) / 2);
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 100dvh;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--inline-pad);
+  border-bottom: var(--hairline);
+}
+
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.wordmark__tagline {
+  display: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-muted);
+}
+
+.masthead__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.workspace {
+  display: grid;
+  grid-template-areas:
+    'tape'
+    'machine';
+  /* The tape gets what is left, but never less than a few entries. */
+  grid-template-rows: minmax(10rem, 1fr) auto;
+  min-height: 0;
+}
+
+.machine {
+  grid-area: machine;
+  display: grid;
+  gap: var(--space-3);
+  padding: 0 var(--gutter) max(var(--gutter), env(safe-area-inset-bottom));
+}
+
+/*
+ * Size containment: however long the tape gets, it never makes the page
+ * taller. It takes the height of its grid row and scrolls inside.
+ */
+.tape {
+  grid-area: tape;
+  contain: size;
+}
+
+.colophon {
+  display: none;
+}
+
+@media (min-width: 30rem) {
+  .wordmark__tagline {
+    display: inline;
+  }
+}
+
+@media (min-width: 48rem) {
+  .workspace {
+    grid-template-areas: 'machine tape';
+    grid-template-columns: var(--machine-width) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    column-gap: clamp(var(--space-6), 6vw, var(--space-8));
+    padding: var(--space-6) var(--inline-pad) 0;
+  }
+
+  .machine {
+    align-self: start;
+    padding: 0;
+  }
+
+  .colophon {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--inline-pad) var(--space-4);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+  }
+}
