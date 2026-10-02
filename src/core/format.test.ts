@@ -9,8 +9,8 @@ import {
   type Locale,
 } from './format';
 
-/** No-break space, the Russian digit group separator. */
-const NB = String.fromCharCode(0xa0);
+/** Narrow no-break space, the Russian digit group separator. */
+const NB = String.fromCharCode(0x202f);
 
 const text = (value: string, locale: Locale, digits?: number): string =>
   numberToText(formatDecimal(parseDecimal(value), locale, digits), locale);

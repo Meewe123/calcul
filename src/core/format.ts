@@ -30,7 +30,7 @@ interface NumberSymbols {
 }
 
 const SYMBOLS: Readonly<Record<Locale, NumberSymbols>> = {
-  ru: { decimal: ',', group: '\u00a0' }, // no-break space, as Intl does
+  ru: { decimal: ',', group: '\u202f' }, // narrow no-break space, as Russian typography asks
   en: { decimal: '.', group: ',' },
 };
 

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import type { TapeEntry } from './calculator';
 import { entryToText, parseTape, serializeTape, tapeToText } from './tape';
 
-const NB = String.fromCharCode(0xa0);
+const NB = String.fromCharCode(0x202f);
 
 const entries: TapeEntry[] = [
   { id: 1, source: '0.1+0.2', result: '0.3', exact: true },
