@@ -21,7 +21,8 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
-    "images": "node scripts/render-images.ts"
+    "images": "node scripts/render-images.ts",
+    "screenshots": "node scripts/screenshots.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
